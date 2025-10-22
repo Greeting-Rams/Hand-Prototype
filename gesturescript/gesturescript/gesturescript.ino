@@ -10,9 +10,9 @@ const uint8_t PIN_PINKY = 2;
 // If some servos are reversed mechanically, set these to true
 bool REVERSE_THUMB = false;
 bool REVERSE_INDEX = false;
-bool REVERSE_MIDDLE= true;
+bool REVERSE_MIDDLE= false;
 bool REVERSE_RING  = false;
-bool REVERSE_PINKY = true;
+bool REVERSE_PINKY = false;
 
 // Optional per-servo trim (mechanical neutral offset in degrees)
 int8_t TRIM_THUMB = 0;
@@ -73,12 +73,15 @@ void setHand(int t, int i, int m, int r, int p, int step=2, int msPerStep=12) {
 // === Preset gestures (t, i, m, r, p) ===
 // Angles are examples; adjust to fit your mechanics:
 // 0 = fully extended, 180 = fully curled (if not reversed)
-void gestureOpen()        { setHand(  0,   0,   0,   0,   0, 3, 10); }
-void gestureFist()        { setHand(180, 180, 180, 180, 180, 3, 12); }
-void gesturePeace()       { setHand(170,   0,   0, 170, 170, 3, 12); }
-void gestureThumbsUp()    { setHand(  0, 170, 170, 170, 170, 3, 12); }
-void gestureWaveOpen()    { setHand(  0,  20,  20,  20,  20, 2, 10); }
-void gestureWaveClosed()  { setHand(  0, 120, 120, 120, 120, 2, 10); }
+//void gestureOpen()        { setHand(  50,   40,   30,   70,   70, 3, 10); }
+void testOpen() {setHand(0,70,30,80,0,3,10);}
+
+//void gestureFist()        { setHand(180, 180, 180, 180, 180, 3, 12); }
+void testFist(){setHand(180, 180, 180, 0, 180, 3, 12);}
+void gesturePeace()       { setHand(180,180,30,80,180, 3, 12); }
+void gestureThumbsUp()    { setHand(180, 180, 180, 0, 0, 3, 12); }
+void gestureWaveOpen()    { setHand(  0,  90,  50,  100,  20, 2, 10); }
+void gestureWaveClosed()  { setHand(  120, 120, 120, 0, 0, 2, 10); }
 
 void wave(int cycles=3) {
   for (int k=0; k<cycles; ++k) {
@@ -105,21 +108,25 @@ void setup() {
 //Updated 10/15, hasn't been tested.
 void loop() {
   Serial.println("Open");
-  gestureOpen();
+  testOpen();
   delay(400);
+  
+  Serial.println("fist");
+  testFist();
+  delay(300);
+  /*
   Serial.println("Fist");
   gestureFist();
   delay(500);
-  /*
+  */
   Serial.println("Open");
-  gestureOpen();
-  delay(300);*/
+  testOpen();
+  delay(300);
   Serial.println("Peace");
   gesturePeace();
   delay(700);
-  /*
   Serial.println("Open");
-  gestureOpen();
+  testOpen();
   delay(300);
   
   Serial.println("ThumbsUp");
@@ -127,7 +134,7 @@ void loop() {
   delay(700);
   Serial.println("Wave");
   wave(4);
-  delay(600);*/
+  delay(600);
   Serial.println("done");
 
 }
