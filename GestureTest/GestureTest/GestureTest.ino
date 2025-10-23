@@ -1,4 +1,7 @@
 #include <Servo.h>
+#include <AUnit.h>
+#include <ArduinoUnit.h>
+
 
 // ==== Pin mapping (change to match your wiring) ====
 const uint8_t PIN_THUMB = 6;
@@ -70,71 +73,69 @@ void setHand(int t, int i, int m, int r, int p, int step=2, int msPerStep=12) {
   }
 }
 
-// === Preset gestures (t, i, m, r, p) ===
-// Angles are examples; adjust to fit your mechanics:
-// 0 = fully extended, 180 = fully curled (if not reversed)
-//void gestureOpen()        { setHand(  50,   40,   30,   70,   70, 3, 10); }
-void testOpen() {setHand(0,70,30,80,0,3,10);}
+//r, p, m, i, t
+void Open(){setHand(0,70,30,80,0,3,10);}
+void Fist(){setHand(180, 180, 180, 0, 180, 3, 12);}
+void Peace()       { setHand(180,180,30,80,180, 3, 12); }
+void ThumbsUp()    { setHand(180,180,180,0,0,3,12); }
+void WaveOpen()    { setHand(0,90,50,100,20,2,10); }
+void WaveClosed()  { setHand(120,140,120,0,0,2,10); }
 
-//void gestureFist()        { setHand(180, 180, 180, 180, 180, 3, 12); }
-void testFist(){setHand(180, 180, 180, 0, 180, 3, 12);}
-void gesturePeace()       { setHand(180,180,30,80,180, 3, 12); }
-void gestureThumbsUp()    { setHand(180, 180, 180, 0, 0, 3, 12); }
-void gestureWaveOpen()    { setHand(  0,  90,  50,  100,  20, 2, 10); }
-void gestureWaveClosed()  { setHand(  140, 160, 120, 0, 0, 2, 10); }
+void test_open(){
+  int pinky = 70;
+  int ring = 0;
+  int mid = 30;
+  int index = 80;
+  int thumb = 0;
+  int openstuff[] ={0,70,30,80,0};
+  //pinky
+  assertEqual(70, openstuff[1]);
+}
+void test_peace(){
+  int pinky = 180;
+  int ring = 180;
+  int mid = 30;
+  int index = 80;
+  int thumb = 180;
+  int openstuff[] ={180,180,30,80,180};
+  //pinky
+  assertEqual(70, openstuff[1]);
+}
+void test_fist(){
+  int pinky = 180;
+  int ring = 180;
+  int mid = 180;
+  int index = 0;
+  int thumb = 180;
+  int openstuff[] ={180, 180, 180, 0, 180};
+  //pinky
+  assertEqual(180, openstuff[1]);
+}
+
 
 void wave(int cycles=3) {
   for (int k=0; k<cycles; ++k) {
-    gestureWaveOpen();
+    WaveOpen();
     delay(160);
-    gestureWaveClosed();
+    WaveClosed();
     delay(160);
   }
 }
 
 void setup() {
   Serial.begin(9600);
-  // Attach; if your servos need different pulse range, use attach(pin, minUs, maxUs)
   sThumb.attach(PIN_THUMB);
   sIndex.attach(PIN_INDEX);
   sMiddle.attach(PIN_MIDDLE);
   sRing.attach(PIN_RING);
   sPinky.attach(PIN_PINKY);
-
-  // Start neutral
   writeServosRaw(curThumb, curIndex, curMiddle, curRing, curPinky);
   delay(10);
+ // aunit::TestRunner::begin();
 }
-//Updated 10/15, hasn't been tested.
+
+
 void loop() {
-  Serial.println("Open");
-  testOpen();
-  delay(400);
-  
-  Serial.println("fist");
-  testFist();
-  delay(300);
-  /*
-  Serial.println("Fist");
-  gestureFist();
-  delay(500);
-  */
-  Serial.println("Open");
-  testOpen();
-  delay(300);
-  Serial.println("Peace");
-  gesturePeace();
-  delay(700);
-  Serial.println("Open");
-  testOpen();
-  delay(300);
-  
-  Serial.println("ThumbsUp");
-  gestureThumbsUp();
-  delay(700);
-  Serial.println("Wave");
-  wave(4);
-  delay(600);
-  Serial.println("done");
+  aunit::TestRunner::run();
 
 }
